@@ -50,7 +50,7 @@ Created by Maksim Radaev/[@vflame6](https://github.com/vflame6)
 | [LeakCheck](https://leakcheck.io/?ref=486555) | Yes | email, username, domain, keyword, phone | Paid                |
 | [Leak-Lookup](https://leak-lookup.com/) | Yes | email, username, domain, keyword, phone | Paid                |
 | [LeakSight](https://leaksight.com/) | Yes | email, username, domain, keyword, phone | Paid                |
-| [OSINTLeak](https://osintleak.com/) | Yes | email, username, domain, keyword, phone | Paid                |
+| [OSINTLeak](https://app.osintleak.com/auth/signup?referral_code=FLAME6) | Yes | email, username, domain, keyword, phone | Paid                |
 | [ProxyNova](https://www.proxynova.com/tools/comb) | No | all | Free                |
 | [Snusbase](https://snusbase.com/) | Yes | email, username, domain, keyword, phone | Paid                |
 | [WeLeakInfo](https://weleakinfo.io/) | Yes | email, username, domain, keyword, phone | Paid                |
