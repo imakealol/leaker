@@ -137,3 +137,4 @@ Read the usage disclaimer at [DISCLAIMER.md](https://github.com/vflame6/leaker/b
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=vflame6/leaker&type=date&legend=top-left)](https://www.star-history.com/#vflame6/leaker&type=date&legend=top-left)
+
