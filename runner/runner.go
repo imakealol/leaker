@@ -202,6 +202,31 @@ func (r *Runner) RunEnumeration(ctx context.Context) error {
 	return r.EnumerateMultipleTargets(ctx, t, outputs)
 }
 
+// Target-syntax validators. The TLD quantifier is {2,} (not a fixed upper
+// bound) so long TLDs like ".group" or ".photography" are accepted. Input is
+// lower-cased before matching, so the email pattern only needs [a-z].
+var (
+	emailRegex  = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$`)
+	domainRegex = regexp.MustCompile(`^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$`)
+	phoneRegex  = regexp.MustCompile(`^\d{10,15}$`)
+)
+
+// matchesTargetType reports whether line is a syntactically valid target for
+// the given scan type. Phone input is expected to be digit-normalized already.
+// Types without a syntax constraint (username, keyword) always pass.
+func matchesTargetType(scanType sources.ScanType, line string) bool {
+	switch scanType {
+	case sources.TypeEmail:
+		return emailRegex.MatchString(line)
+	case sources.TypeDomain:
+		return domainRegex.MatchString(line)
+	case sources.TypePhone:
+		return phoneRegex.MatchString(line)
+	default:
+		return true
+	}
+}
+
 func (r *Runner) EnumerateMultipleTargets(ctx context.Context, reader io.Reader, writers []io.Writer) error {
 	if !r.options.NoFilter {
 		logger.Debugf("Results filtering is enabled, leaker will filter results by matching every result to inputted target.")
@@ -210,9 +235,6 @@ func (r *Runner) EnumerateMultipleTargets(ctx context.Context, reader io.Reader,
 	}
 
 	scanner := bufio.NewScanner(reader)
-	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
-	domainRegex := regexp.MustCompile(`^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$`)
-	phoneRegex := regexp.MustCompile(`^\d{10,15}$`)
 
 	var errs []error
 	for scanner.Scan() {
@@ -223,15 +245,8 @@ func (r *Runner) EnumerateMultipleTargets(ctx context.Context, reader io.Reader,
 			line = utils.ExtractPhoneDigits(line)
 		}
 
-		// check if valid email, domain, or phone
-		isEmail := emailRegex.MatchString(line)
-		isDomain := domainRegex.MatchString(line)
-		isPhone := phoneRegex.MatchString(line)
-
-		if line == "" ||
-			(r.options.Type == sources.TypeEmail && !isEmail) ||
-			(r.options.Type == sources.TypeDomain && !isDomain) ||
-			(r.options.Type == sources.TypePhone && !isPhone) {
+		// check if the line is a syntactically valid target for the scan type
+		if line == "" || !matchesTargetType(r.options.Type, line) {
 			logger.Infof("Can't parse input as target, skipping: %s", line)
 			continue
 		}

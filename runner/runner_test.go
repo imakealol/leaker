@@ -212,6 +212,31 @@ func TestEnumerateMultipleTargets_NormalizesPhoneInput(t *testing.T) {
 	}
 }
 
+// TestMatchesTargetType_Email checks email syntax validation, including TLDs
+// longer than four characters (e.g. ".group", ".photography"), which were
+// previously rejected by an over-restrictive {2,4} quantifier.
+func TestMatchesTargetType_Email(t *testing.T) {
+	cases := []struct {
+		line string
+		want bool
+	}{
+		{"user@example.ru", true},
+		{"first.last@example.group", true}, // long TLD, dotted local part
+		{"user@example.com", true},
+		{"user@sub.example.photography", true}, // long TLD, subdomain
+		{"a+b@c.co", true},
+		{"notanemail", false},
+		{"notanemail.com", false},
+		{"missing@tld", false},
+		{"", false},
+	}
+	for _, c := range cases {
+		if got := matchesTargetType(sources.TypeEmail, c.line); got != c.want {
+			t.Errorf("matchesTargetType(email, %q) = %v, want %v", c.line, got, c.want)
+		}
+	}
+}
+
 func TestEnumerateMultipleTargets_SkipsNonDomainForDomainType(t *testing.T) {
 	r := newTestRunner([]string{})
 	r.options.Type = sources.TypeDomain
