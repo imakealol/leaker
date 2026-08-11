@@ -133,8 +133,3 @@ Feel free to open an issue if something does not work, or if you have any ideas 
 ## Disclaimer
 
 Read the usage disclaimer at [DISCLAIMER.md](https://github.com/vflame6/leaker/blob/main/DISCLAIMER.md).
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=vflame6/leaker&type=date&legend=top-left)](https://www.star-history.com/#vflame6/leaker&type=date&legend=top-left)
-
